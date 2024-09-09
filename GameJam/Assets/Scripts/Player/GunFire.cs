@@ -5,11 +5,15 @@ using UnityEngine;
 public class GunFire : MonoBehaviour
 {
     [Header("Gun")]
+    public GameObject pistol;
+    public Animator animator;
     public float damage = 20f;
     public float range = 100f;
+    public bool is_pistol = false;
 
     public Camera cam;
     public ParticleSystem particle;
+    public ParticleSystem hit_particle;
 
     void Start()
     {
@@ -18,10 +22,28 @@ public class GunFire : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (is_pistol)
         {
-            Shoot();
-        }
+			if (Input.GetMouseButtonUp(0))
+			{
+				if (pistol.activeSelf) Shoot();
+			}
+
+			if (Input.GetKey(KeyCode.R) && !animator.GetCurrentAnimatorStateInfo(0).IsName("reload"))
+			{
+				animator.Play("reload");
+			}
+
+			if (Input.GetMouseButtonDown(1) && !animator.GetCurrentAnimatorStateInfo(0).IsName("reload"))
+			{
+				animator.Play("zoom");
+			}
+
+			if (Input.GetMouseButtonUp(1))
+			{
+				animator.Play("Idle");
+			}
+		}
     }
 
     private void Shoot()
@@ -32,7 +54,8 @@ public class GunFire : MonoBehaviour
 
         if (Physics.Raycast(cam.transform.position, cam.transform.forward, out hit, range))
         {
-
+            var z = Instantiate(hit_particle, hit.point, Quaternion.LookRotation(hit.normal));
+            Destroy(z.gameObject, 2);
         }
     }
 }

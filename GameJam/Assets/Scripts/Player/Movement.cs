@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
     [Header("Player")]
+    public GameObject pistol;
     public GameObject cam;
     public float speed;
     public float jump_hight;
@@ -49,8 +50,11 @@ public class Movement : MonoBehaviour
 
 			velocity.y += gravity * Time.deltaTime;
 			controller.Move(velocity * Time.deltaTime);
+
+            pistol.SetActive(true);
 		} else
         {
+            pistol.SetActive(false);
             is_water = false;
 
             if (Input.GetKeyDown(KeyCode.Space))
